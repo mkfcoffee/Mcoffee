@@ -2,7 +2,7 @@ package personal.mcoffee.utils;
 
 import java.util.regex.Pattern;
 
-import static com.blankj.utilcode.utils.ConstUtils.*;
+import static personal.mcoffee.utils.ConstUtils.*;
 
 /**
  * <pre>

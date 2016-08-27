@@ -1,56 +1,88 @@
 package personal.mcoffee.base;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 
-import com.ashokvarma.bottomnavigation.BottomNavigationBar;
-import com.ashokvarma.bottomnavigation.BottomNavigationItem;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import personal.mcoffee.R;
 
 /**
  * BaseActivity
  */
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
-    @BindView(R.id.bottom_navigation_bar)
-    BottomNavigationBar bottomNavigationBar;
+    public static final String ACTION_EXIT = "action_exit";
+
+    private BroadcastReceiver brc = new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // TODO Auto-generated method stub
+            if (ACTION_EXIT.equals(intent.getAction())) {
+                finish();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_base);
-        ButterKnife.bind(this);
+        initData();
+        initView();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ACTION_EXIT);
+        registerReceiver(brc, intentFilter);
     }
 
     /**
-     * 初始化底部导航栏
+     * add Fragment
+     * @param fragment
      */
-    protected  void initBottomNavigation(){
-        bottomNavigationBar.addItem(new BottomNavigationItem(R.drawable.icon_gank,"干货"))
-                           .addItem(new BottomNavigationItem(R.drawable.icon_zhihu,"知乎"))
-                           .addItem(new BottomNavigationItem(R.drawable.icon_video,"视频"))
-                           .initialise();
-
-        bottomNavigationBar.setTabSelectedListener(new BottomNavigationBar.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(int position) {
-
-            }
-
-            @Override
-            public void onTabUnselected(int position) {
-
-            }
-
-            @Override
-            public void onTabReselected(int position) {
-
-            }
-        });
+    protected void addFragment(@IdRes int containerViewId, @NonNull Fragment fragment){
+        getSupportFragmentManager().beginTransaction()
+                                   .replace(containerViewId,fragment,fragment.getClass().getSimpleName())
+                                   .addToBackStack(fragment.getClass().getSimpleName())
+                                   .commitAllowingStateLoss();
     }
 
+    /**
+     * remove Fragment
+     */
+    protected void removeFragment(){
+        if(getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            getSupportFragmentManager().popBackStack();
+        }else{
+            finish();
+        }
+    }
+
+    /**
+     * 退出app
+     */
+    protected void exitApp() {
+        Intent intent = new Intent();
+        intent.setAction(ACTION_EXIT);
+        sendBroadcast(intent);
+    }
+
+    /**
+     * 初始化数据
+     */
+    protected abstract void initData();
+
+    /**
+     * 初始化View
+     */
+    protected abstract void initView();
 }

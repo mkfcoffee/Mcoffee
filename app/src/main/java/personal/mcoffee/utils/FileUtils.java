@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.blankj.utilcode.utils.ConstUtils.KB;
+import static personal.mcoffee.utils.ConstUtils.KB;
 
 /**
  * <pre>

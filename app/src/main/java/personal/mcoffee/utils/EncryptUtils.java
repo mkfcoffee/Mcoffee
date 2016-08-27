@@ -12,7 +12,7 @@ import java.security.SecureRandom;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
-import static com.blankj.utilcode.utils.ConvertUtils.*;
+import static personal.mcoffee.utils.ConvertUtils.*;
 
 /**
  * <pre>
