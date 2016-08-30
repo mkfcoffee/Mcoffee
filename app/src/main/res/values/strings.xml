@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Mcoffee</string>
+    <string name="gank_type_android">Android</string>
 </resources>

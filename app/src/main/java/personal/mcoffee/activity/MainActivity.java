@@ -13,6 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import personal.mcoffee.R;
 import personal.mcoffee.base.BaseActivity;
+import personal.mcoffee.fragment.GankFragment;
 import personal.mcoffee.utils.Log;
 
 public class MainActivity extends BaseActivity {
@@ -42,6 +43,7 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         initBottomNavigation();
         initToolbar();
+        addFragment(R.id.main_container, GankFragment.getInstance());
     }
 
     /**
