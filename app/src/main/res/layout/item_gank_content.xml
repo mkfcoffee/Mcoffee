@@ -1,47 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <TextView
-        android:id="@+id/gank_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:textColor="@color/black"
-        android:textSize="14sp" />
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/gank_title"
-        android:layout_marginTop="4dp">
-
-        <ImageView
-
-            android:id="@+id/gank_content_iv"
-            android:layout_width="60dp"
-            android:layout_height="60dp" />
+        android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/gank_type_android"
-            android:layout_width="wrap_content"
+            android:id="@+id/gank_item_title"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@id/gank_content_iv"
             android:padding="5dp"
-            android:text="@string/gank_type_android"
-            android:textSize="14sp" />
+            android:text="android title"
+            android:textColor="@android:color/black"
+            android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/gank_android_subtitle"
+            android:id="@+id/gank_item_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/gank_type_android"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@id/gank_content_iv"
+            android:layout_below="@id/gank_item_title"
             android:padding="5dp"
-            android:text="android title  android title"
+            android:text="2016.8.30"
+            android:textColor="@color/blue_grey"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/gank_item_who"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/gank_item_title"
+            android:padding="5dp"
+            android:text="who"
+            android:textColor="@color/blue_grey"
             android:textSize="12sp" />
     </RelativeLayout>
-</RelativeLayout>
+</android.support.v7.widget.CardView>

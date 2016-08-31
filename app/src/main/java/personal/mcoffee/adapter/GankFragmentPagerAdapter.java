@@ -1,39 +1,42 @@
 package personal.mcoffee.adapter;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
-import personal.mcoffee.fragment.GankListFragment;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Mcoffee on 2016/8/29.
  */
-public class GankFragmentPagerAdapter extends FragmentPagerAdapter {
+public class GankFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
-    //福利 | Android | iOS | 休息视频 | 拓展资源 | 前端
-    private String[] titles = {"Android", "iOS", "前端", "拓展资源", "福利"};
+    private List<String> titles = new ArrayList<>();
+    private List<Fragment> fragments = new ArrayList<>();
 
-    private Context context;
-
-    public GankFragmentPagerAdapter(FragmentManager fm, Context context) {
+    public GankFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
+    }
+
+    public void addTab(Fragment fragment, String title) {
+        fragments.add(fragment);
+        titles.add(title);
     }
 
     @Override
     public int getCount() {
-        return titles.length;
+        return titles.size();
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return titles[position];
+        return titles.get(position);
     }
 
     @Override
     public Fragment getItem(int position) {
-        return GankListFragment.getInstance(titles[position]);
+        return fragments.get(position);
     }
 
 }

@@ -45,6 +45,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         registerReceiver(brc, intentFilter);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(brc);
+    }
+
     /**
      * add Fragment
      * @param fragment

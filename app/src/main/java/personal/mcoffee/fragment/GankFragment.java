@@ -3,7 +3,7 @@ package personal.mcoffee.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +29,9 @@ public class GankFragment extends BaseFragment {
 
     private Unbinder unbinder;
 
-    private FragmentPagerAdapter fragmentPagerAdapter;
+    private GankFragmentPagerAdapter adapter;
+
+    String[] titles = {"Android", "iOS", "前端", "拓展资源", "福利"};
 
 
     public static GankFragment getInstance() {
@@ -42,10 +44,31 @@ public class GankFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_gank,container,false);
         unbinder = ButterKnife.bind(this,view);
-        fragmentPagerAdapter = new GankFragmentPagerAdapter(getActivity().getSupportFragmentManager(),getActivity());
-        viewPager.setAdapter(fragmentPagerAdapter);
+        adapter = new GankFragmentPagerAdapter(getChildFragmentManager());
+        for (int i = 0; i < titles.length; i++) {
+            adapter.addTab(GankListFragment.getInstance(titles[i]), titles[i]);
+        }
+        viewPager.setOffscreenPageLimit(2);
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.setTabMode(TabLayout.MODE_FIXED);
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
         return view;
     }
 
@@ -53,5 +76,10 @@ public class GankFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public void fetchData() {
+
     }
 }
