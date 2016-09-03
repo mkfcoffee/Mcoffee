@@ -41,9 +41,8 @@ public class MainActivity extends BaseActivity {
     protected void initView() {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        initBottomNavigation();
         initToolbar();
-        addFragment(R.id.main_container, GankFragment.getInstance());
+        initBottomNavigation();
     }
 
     /**
@@ -59,6 +58,19 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onTabSelected(int position) {
                 Log.v(MainActivity.this, "onTabSelected postion:" + position);
+                switch (position){
+                    case 0:
+                        getSupportActionBar().setTitle("Gank");
+                        addFragment(R.id.main_container, GankFragment.getInstance());
+                        break;
+                    case 1:
+                        getSupportActionBar().setTitle("知乎日报");
+                        break;
+                    case 2:
+                        break;
+                    default:
+                        break;
+                }
             }
 
             @Override
@@ -71,6 +83,10 @@ public class MainActivity extends BaseActivity {
                 Log.v(MainActivity.this, "onTabReselected postion:" + position);
             }
         });
+        //初次选中
+        getSupportActionBar().setTitle("Gank");
+        addFragment(R.id.main_container, GankFragment.getInstance());
+        bottomNavigationBar.setFirstSelectedPosition(0);
     }
 
     /**
