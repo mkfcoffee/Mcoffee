@@ -13,6 +13,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import personal.mcoffee.R;
 import personal.mcoffee.base.BaseActivity;
+import personal.mcoffee.di.component.DaggerMainActivityComponent;
+import personal.mcoffee.di.component.MainActivityComponent;
 import personal.mcoffee.fragment.GankFragment;
 import personal.mcoffee.utils.Log;
 
@@ -27,9 +29,15 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.main_container)
     RelativeLayout mRelativeLayout;
 
+    MainActivityComponent mainActivityComponent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mainActivityComponent = DaggerMainActivityComponent.builder()
+                                                           .applicationComponent(getApplicationComponent())
+                                                           .build();
+        mainActivityComponent.inject(this);
     }
 
     @Override
@@ -44,6 +52,7 @@ public class MainActivity extends BaseActivity {
         initToolbar();
         initBottomNavigation();
     }
+
 
     /**
      * 初始化底部导航栏
