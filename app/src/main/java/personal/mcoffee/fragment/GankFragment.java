@@ -17,6 +17,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import personal.mcoffee.R;
 import personal.mcoffee.adapter.GankFragmentPagerAdapter;
+import personal.mcoffee.adapter.GankWelfareAdapter;
 import personal.mcoffee.base.BaseFragment;
 import personal.mcoffee.di.component.DaggerGankComponent;
 import personal.mcoffee.di.component.GankComponent;
@@ -60,7 +61,12 @@ public class GankFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_gank,container,false);
         unbinder = ButterKnife.bind(this,view);
         for (int i = 0; i < titles.size(); i++) {
-            adapter.addTab(GankListFragment.getInstance(titles.get(i)), titles.get(i));
+            String title = titles.get(i);
+            if("福利".equals(title)){
+                adapter.addTab(GankWelfareFragment.getInstance(title),title);
+            }else{
+                adapter.addTab(GankListFragment.getInstance(title), title);
+            }
         }
         viewPager.setOffscreenPageLimit(1);
         viewPager.setAdapter(adapter);

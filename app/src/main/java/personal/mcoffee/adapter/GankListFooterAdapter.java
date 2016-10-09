@@ -16,19 +16,22 @@ import butterknife.ButterKnife;
 import personal.mcoffee.R;
 import personal.mcoffee.adapter.base.HeaderAndFooterAdapter;
 import personal.mcoffee.bean.Gank;
+import personal.mcoffee.listener.RecyclerViewListener;
+import personal.mcoffee.utils.TimeUtils;
 
 /**
  * Created by Mcoffee on 2016/8/31.
  */
 public class GankListFooterAdapter extends HeaderAndFooterAdapter {
 
-    private static final int TYPE_NORMAL=1;
+    private static final int TYPE_NORMAL = 1;
 
     private List<Gank> list;
     private Context mContext;
     private LayoutInflater mLayoutInflater;
+    private RecyclerViewListener recyclerViewListener;
 
-    public GankListFooterAdapter(List<Gank> list, Context context){
+    public GankListFooterAdapter(List<Gank> list, Context context) {
         this.list = list;
         this.mContext = context;
         mLayoutInflater = LayoutInflater.from(mContext);
@@ -89,16 +92,26 @@ public class GankListFooterAdapter extends HeaderAndFooterAdapter {
     }
 
     @Override
-    public void bindNormalItemView(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof GankListViewHolder ){
-            GankListViewHolder normalVH = (GankListViewHolder)holder;
+    public void bindNormalItemView(RecyclerView.ViewHolder holder, final int position) {
+        if (holder instanceof GankListViewHolder) {
+            GankListViewHolder normalVH = (GankListViewHolder) holder;
             normalVH.titleTv.setText(list.get(position).desc);
-            normalVH.timeTv.setText(list.get(position).publishedAt);
+            normalVH.timeTv.setText(TimeUtils.date2String(list.get(position).publishedAt));
             normalVH.whoTv.setText(list.get(position).who);
+            if(recyclerViewListener != null){
+                normalVH.gankRl.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        recyclerViewListener.onItemClick(position);
+                    }
+                });
+            }
         }
     }
 
     static class GankListViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.gank_item)
+        RelativeLayout gankRl;
         @BindView(R.id.gank_item_title)
         TextView titleTv;
         @BindView(R.id.gank_item_time)
@@ -122,5 +135,9 @@ public class GankListFooterAdapter extends HeaderAndFooterAdapter {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public void setRecyclerViewListener(RecyclerViewListener recyclerViewListener) {
+        this.recyclerViewListener = recyclerViewListener;
     }
 }

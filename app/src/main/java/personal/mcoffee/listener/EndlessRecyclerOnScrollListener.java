@@ -39,6 +39,7 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
             if (itemCount > previousTotal) {
                 isLoading = false;
                 previousTotal = itemCount;
+                Log.v("EndlessRecyclerOnScrollListener previousTotal",previousTotal);
             }
         }
         if (!isLoading && (itemCount - childCount) <= firstVisibleItem) {

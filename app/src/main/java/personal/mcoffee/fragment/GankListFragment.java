@@ -1,5 +1,6 @@
 package personal.mcoffee.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -10,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +20,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import personal.mcoffee.R;
+import personal.mcoffee.activity.WebActivity;
 import personal.mcoffee.adapter.GankListFooterAdapter;
 import personal.mcoffee.base.BaseFragment;
 import personal.mcoffee.bean.Gank;
 import personal.mcoffee.bean.GankData;
 import personal.mcoffee.constant.GankUrl;
 import personal.mcoffee.listener.EndlessRecyclerOnScrollListener;
+import personal.mcoffee.listener.RecyclerViewListener;
 import personal.mcoffee.network.GankRequest;
 import personal.mcoffee.utils.Log;
 import retrofit2.Call;
@@ -47,7 +51,7 @@ public class GankListFragment extends BaseFragment {
 
     private Unbinder unbinder;
 
-    private RecyclerView.Adapter gankListAdapter;
+    private GankListFooterAdapter gankListAdapter;
 
     private List<Gank> gankList;
 
@@ -119,6 +123,15 @@ public class GankListFragment extends BaseFragment {
             @Override
             public void onLoadMore(int currentPage) {
                 getBackendData(category,currentPage);
+            }
+        });
+        gankListAdapter.setRecyclerViewListener(new RecyclerViewListener() {
+            @Override
+            public void onItemClick(int position) {
+                Toast.makeText(getActivity(),"current position : "+position +"url: "+gankList.get(position).url,Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), WebActivity.class);
+                intent.putExtra("url",gankList.get(position).url);
+                startActivity(intent);
             }
         });
         return view;

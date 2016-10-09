@@ -9,6 +9,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -16,6 +21,7 @@ import butterknife.ButterKnife;
 import personal.mcoffee.R;
 import personal.mcoffee.adapter.base.HeaderAndFooterAdapter;
 import personal.mcoffee.bean.Gank;
+import personal.mcoffee.helper.PaddingAnimation;
 
 /**
  * Created by Mcoffee on 2016/8/31.
@@ -92,7 +98,20 @@ public class GankWelfareAdapter extends HeaderAndFooterAdapter {
     public void bindNormalItemView(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof GankWelfareViewHolder ){
             GankWelfareViewHolder normalVH = (GankWelfareViewHolder)holder;
-
+//            ViewGroup.LayoutParams lp = normalVH.welfareIv.getLayoutParams();
+            Glide.with(mContext)
+                 .load(list.get(position).url)
+                 .fitCenter()
+                 .crossFade(1000)
+//                 .placeholder(R.drawable.img_loading)
+                 .error(R.drawable.img_load_error)
+                 .into(normalVH.welfareIv);
+//                 .into(new GlideDrawableImageViewTarget(normalVH.welfareIv){
+//                     @Override
+//                     public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
+//                         super.onResourceReady(resource, new PaddingAnimation<>(animation));
+//                     }
+//                 });
         }
     }
 

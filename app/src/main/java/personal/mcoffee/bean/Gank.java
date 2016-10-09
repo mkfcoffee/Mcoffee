@@ -1,5 +1,7 @@
 package personal.mcoffee.bean;
 
+import java.util.Date;
+
 /**
  * Created by Mcoffee on 2016/8/27.
  */
@@ -15,12 +17,12 @@ public class Gank {
 //    who: "弦影"
 
     public String _id;
-    public String createdAt;
+    public Date createdAt;
     public String desc;
-    public String publishedAt;
+    public Date publishedAt;
     public String source;
     public String type;
     public String url;
-    public String used;
+    public boolean used;
     public String who;
 }

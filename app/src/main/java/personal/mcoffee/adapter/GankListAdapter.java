@@ -13,6 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import personal.mcoffee.R;
 import personal.mcoffee.bean.Gank;
+import personal.mcoffee.utils.TimeUtils;
 
 /**
  * Created by Mcoffee on 2016/8/30.
@@ -44,7 +45,7 @@ public class GankListAdapter extends RecyclerView.Adapter<GankListAdapter.GankLi
     @Override
     public void onBindViewHolder(GankListViewHolder holder, int position) {
         holder.titleTv.setText(list.get(position).desc);
-        holder.timeTv.setText(list.get(position).publishedAt);
+        holder.timeTv.setText(TimeUtils.date2String(list.get(position).publishedAt));
         holder.whoTv.setText(list.get(position).who);
     }
 
