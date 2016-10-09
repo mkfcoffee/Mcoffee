@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
-import personal.mcoffee.R;
+import personal.mcoffee.di.component.ApplicationComponent;
 
 /**
  * BaseActivity
@@ -33,6 +33,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getApplicationComponent().inject(this);
         initData();
         initView();
     }
@@ -49,6 +50,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(brc);
+    }
+
+    protected ApplicationComponent getApplicationComponent(){
+        return  ((BaseApplication)getApplication()).getmApplicationComponent();
     }
 
     /**

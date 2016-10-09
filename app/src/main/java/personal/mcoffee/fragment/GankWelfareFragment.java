@@ -1,17 +1,15 @@
 package personal.mcoffee.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,14 +18,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import personal.mcoffee.R;
-import personal.mcoffee.activity.WebActivity;
-import personal.mcoffee.adapter.GankListFooterAdapter;
+import personal.mcoffee.adapter.GankWelfareAdapter;
 import personal.mcoffee.base.BaseFragment;
 import personal.mcoffee.bean.Gank;
 import personal.mcoffee.bean.GankData;
 import personal.mcoffee.constant.GankUrl;
 import personal.mcoffee.listener.EndlessRecyclerOnScrollListener;
-import personal.mcoffee.listener.RecyclerViewListener;
+import personal.mcoffee.listener.EndlessWaterfallOnScrollListener;
 import personal.mcoffee.network.GankRequest;
 import personal.mcoffee.utils.Log;
 import retrofit2.Call;
@@ -39,7 +36,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by Mcoffee on 2016/8/29.
  */
-public class GankListFragment extends BaseFragment {
+public class GankWelfareFragment extends BaseFragment {
 
     @BindView(R.id.gank_swipeRefreshLayout)
     SwipeRefreshLayout swipeRefreshLayout;
@@ -51,7 +48,7 @@ public class GankListFragment extends BaseFragment {
 
     private Unbinder unbinder;
 
-    private GankListFooterAdapter gankListAdapter;
+    private RecyclerView.Adapter gankWelfareAdapter;
 
     private List<Gank> gankList;
 
@@ -63,9 +60,11 @@ public class GankListFragment extends BaseFragment {
 
     private static final long REFRESH_DELAY_MILLIS = 1000;
 
+    private static final int SPAN_COUNT = 3;
 
-    public static GankListFragment getInstance(String category){
-        GankListFragment gankListFragment = new GankListFragment();
+
+    public static GankWelfareFragment getInstance(String category){
+        GankWelfareFragment gankListFragment = new GankWelfareFragment();
         Bundle bundle = new Bundle();
         bundle.putString("category",category);
         gankListFragment.setArguments(bundle);
@@ -79,8 +78,8 @@ public class GankListFragment extends BaseFragment {
         category = getArguments().getString("category");
         Log.v("Type","---------"+category);
         if(gankList == null) gankList = new ArrayList<Gank>();
-        if (gankListAdapter == null) {
-            gankListAdapter = new GankListFooterAdapter(gankList, getActivity());
+        if (gankWelfareAdapter == null) {
+            gankWelfareAdapter = new GankWelfareAdapter(gankList, getActivity());
         }
     }
 
@@ -88,7 +87,7 @@ public class GankListFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.v("GankListFragment","Type:"+category +"invoke onCreateView");
+        Log.v("GankWelfareFragment","Type:"+category +"invoke onCreateView");
         final View view = inflater.inflate(R.layout.fragment_gank_list,container,false);
         unbinder = ButterKnife.bind(this,view);
         onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
@@ -112,26 +111,16 @@ public class GankListFragment extends BaseFragment {
         };
         swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        StaggeredGridLayoutManager  staggeredGridLayoutManager = new StaggeredGridLayoutManager(SPAN_COUNT,StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(linearLayoutManager);
+        mRecyclerView.setLayoutManager(staggeredGridLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.setAdapter(gankListAdapter);
+        mRecyclerView.setAdapter(gankWelfareAdapter);
 
-        mRecyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
+        mRecyclerView.addOnScrollListener(new EndlessWaterfallOnScrollListener(staggeredGridLayoutManager) {
             @Override
             public void onLoadMore(int currentPage) {
-                getBackendData(category,currentPage);
-            }
-        });
-        gankListAdapter.setRecyclerViewListener(new RecyclerViewListener() {
-            @Override
-            public void onItemClick(int position) {
-                Toast.makeText(getActivity(),"current position : "+position +"url: "+gankList.get(position).url,Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getActivity(), WebActivity.class);
-                intent.putExtra("url",gankList.get(position).url);
-                startActivity(intent);
+               getBackendData(category,currentPage);
             }
         });
         return view;
@@ -170,8 +159,8 @@ public class GankListFragment extends BaseFragment {
                 GankData gankData = response.body();
                 Log.v("Data", gankData.toString());
                 gankList.addAll(gankData.results);
-                if (gankListAdapter != null) {
-                    gankListAdapter.notifyDataSetChanged();
+                if (gankWelfareAdapter != null) {
+                    gankWelfareAdapter.notifyDataSetChanged();
                 }
             }
 

@@ -8,7 +8,7 @@ import java.util.List;
 public class DailyGank {
 
     public String category;
-    public String error;
+    public boolean error;
     public GankResults gankResults;
 
     public class GankResults {
