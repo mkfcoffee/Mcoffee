@@ -25,7 +25,7 @@ import personal.mcoffee.adapter.GankListFooterAdapter;
 import personal.mcoffee.base.BaseFragment;
 import personal.mcoffee.bean.Gank;
 import personal.mcoffee.bean.GankData;
-import personal.mcoffee.constant.GankUrl;
+import personal.mcoffee.constant.BaseUrl;
 import personal.mcoffee.listener.EndlessRecyclerOnScrollListener;
 import personal.mcoffee.listener.RecyclerViewListener;
 import personal.mcoffee.network.GankRequest;
@@ -159,7 +159,7 @@ public class GankListFragment extends BaseFragment {
      */
     public void getBackendData(String category , final int page){
         Retrofit retrofit = new Retrofit.Builder()
-                                        .baseUrl(GankUrl.CATEGORY_URL)
+                                        .baseUrl(BaseUrl.CATEGORY_URL)
                                         .addConverterFactory(GsonConverterFactory.create())
                                         .build();
         GankRequest request = retrofit.create(GankRequest.class);

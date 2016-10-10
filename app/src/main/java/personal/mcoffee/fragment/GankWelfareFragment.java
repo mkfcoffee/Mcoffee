@@ -22,8 +22,7 @@ import personal.mcoffee.adapter.GankWelfareAdapter;
 import personal.mcoffee.base.BaseFragment;
 import personal.mcoffee.bean.Gank;
 import personal.mcoffee.bean.GankData;
-import personal.mcoffee.constant.GankUrl;
-import personal.mcoffee.listener.EndlessRecyclerOnScrollListener;
+import personal.mcoffee.constant.BaseUrl;
 import personal.mcoffee.listener.EndlessWaterfallOnScrollListener;
 import personal.mcoffee.network.GankRequest;
 import personal.mcoffee.utils.Log;
@@ -148,7 +147,7 @@ public class GankWelfareFragment extends BaseFragment {
      */
     public void getBackendData(String category , final int page){
         Retrofit retrofit = new Retrofit.Builder()
-                                        .baseUrl(GankUrl.CATEGORY_URL)
+                                        .baseUrl(BaseUrl.CATEGORY_URL)
                                         .addConverterFactory(GsonConverterFactory.create())
                                         .build();
         GankRequest request = retrofit.create(GankRequest.class);
