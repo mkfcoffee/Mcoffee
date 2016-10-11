@@ -9,7 +9,7 @@ import retrofit2.http.Path;
  * Created by Mcoffee on 2016/10/10.
  */
 
-public interface ZhiHuRequest {
+public interface ZhiHuService {
     //http://news-at.zhihu.com/api/4/start-image/1080*1776
     @GET("start-image/{width}*{height}")
     Call<SplashImg> getStartImage(@Path("width") int width , @Path("height") int height);

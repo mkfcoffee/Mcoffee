@@ -8,7 +8,7 @@ import retrofit2.http.Path;
 /**
  * Created by Mcoffee on 2016/8/30.
  */
-public interface GankRequest {
+public interface GankService {
 
     @GET("{category}/10/{page}")
      Call<GankData> gankData(@Path("category")String category,@Path("page") int page);

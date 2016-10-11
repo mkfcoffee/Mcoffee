@@ -3,7 +3,7 @@ package personal.mcoffee.mvp.presenter;
 import personal.mcoffee.constant.BaseUrl;
 import personal.mcoffee.mvp.contract.SplashContract;
 import personal.mcoffee.mvp.model.SplashImg;
-import personal.mcoffee.network.ZhiHuRequest;
+import personal.mcoffee.network.ZhiHuService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,7 +34,7 @@ public class SplashPresenter implements SplashContract.Presenter {
                                         .baseUrl(BaseUrl.ZHIHU_URL)
                                         .addConverterFactory(GsonConverterFactory.create())
                                         .build();
-        ZhiHuRequest zhiHuRequest = retrofit.create(ZhiHuRequest.class);
+        ZhiHuService zhiHuRequest = retrofit.create(ZhiHuService.class);
         Call<SplashImg> call = zhiHuRequest.getStartImage(width, height);
         call.enqueue(new Callback<SplashImg>() {
             @Override
