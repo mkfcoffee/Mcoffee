@@ -12,6 +12,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -35,31 +36,41 @@ public class SplashPresenter implements SplashContract.Presenter {
     @Override
     public void fetchImage(int width, int height) {
         Retrofit retrofit = new Retrofit.Builder()
-                                        .baseUrl(BaseUrl.ZHIHU_URL)
-                                        .addConverterFactory(GsonConverterFactory.create())
-                                        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                                        .build();
+                .baseUrl(BaseUrl.WELCOME_PAGE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build();
         ZhiHuService zhiHuService = retrofit.create(ZhiHuService.class);
-        zhiHuService.getStartImage(width,height)
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Subscriber<SplashImg>() {
-                        @Override
-                        public void onCompleted() {
+        zhiHuService.getStartImage(width, height)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(new Func1<SplashImg, String>() {
+                    @Override
+                    public String call(SplashImg splashImg) {
+                        if (splashImg.creativesList == null)
+                            throw new NullPointerException("the Weclome Page Url link failure");
+                        if (splashImg.creativesList.size() == 0)
+                            return null;
+                        return splashImg.creativesList.get(0).url;
+                    }
+                })
+                .subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
 
-                        }
+                    }
 
-                        @Override
-                        public void onError(Throwable e) {
+                    @Override
+                    public void onError(Throwable e) {
 
-                        }
+                    }
 
-                        @Override
-                        public void onNext(SplashImg splashImg) {
-                            mView.showBackgroundImage(splashImg);
-                            mView.showAuthor(splashImg);
-                        }
-                    });
+                    @Override
+                    public void onNext(String imgUrl) {
+                        mView.showBackgroundImage(imgUrl);
+//                            mView.showAuthor(splashImg);
+                    }
+                });
 //        Call<SplashImg> call = zhiHuService.getStartImage(width, height);
 //        call.enqueue(new Callback<SplashImg>() {
 //            @Override

@@ -14,14 +14,15 @@ public interface ZhiHuDailyContract {
 
         void hideRefresh();
 
-        void showStory(DailyStories dailyStories);
+        void showStories(DailyStories dailyStories);
 
-        void appendStory(DailyStories dailyStories);
+        void appendStories(DailyStories dailyStories);
 
-        void showError(String error);
     }
 
     interface Presenter extends BasePresenter {
+        void initialLoad();
+
         void loadMore(String date);
     }
 }

@@ -10,9 +10,9 @@ import personal.mcoffee.mvp.view.BaseView;
 
 public interface SplashContract {
     interface View extends BaseView<Presenter> {
-        void showBackgroundImage(SplashImg splashImg);
+        void showBackgroundImage(String imgUrl);
 
-        void showAuthor(SplashImg splashImg);
+//        void showAuthor(SplashImg splashImg);
     }
 
     interface Presenter extends BasePresenter {

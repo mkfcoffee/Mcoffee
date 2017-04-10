@@ -13,6 +13,10 @@ public class ZhihuDailyPresenter implements ZhiHuDailyContract.Presenter {
 
     }
 
+    @Override
+    public void initialLoad() {
+
+    }
 
     @Override
     public void loadMore(String date) {

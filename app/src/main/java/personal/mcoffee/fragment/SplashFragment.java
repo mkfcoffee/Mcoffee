@@ -104,9 +104,9 @@ public class SplashFragment extends Fragment implements SplashContract.View {
     }
 
     @Override
-    public void showBackgroundImage(final SplashImg splashImg) {
+    public void showBackgroundImage(String imgUrl) {
         Glide.with(getActivity())
-             .load(splashImg.imgUrl)
+             .load(imgUrl)
              .listener(new RequestListener<String, GlideDrawable>() {
                   @Override
                   public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
@@ -128,8 +128,8 @@ public class SplashFragment extends Fragment implements SplashContract.View {
             .into(splashIv);
     }
 
-    @Override
-    public void showAuthor(SplashImg splashImg) {
-        authorTv.setText(splashImg.author);
-    }
+//    @Override
+//    public void showAuthor(SplashImg splashImg) {
+//        authorTv.setText(splashImg.author);
+//    }
 }
