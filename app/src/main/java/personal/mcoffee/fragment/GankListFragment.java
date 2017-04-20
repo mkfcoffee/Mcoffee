@@ -145,6 +145,7 @@ public class GankListFragment extends BaseFragment {
                 swipeRefreshLayout.setRefreshing(true);
             }
         });
+        Log.v("gank", "fetchData()");
         onRefreshListener.onRefresh();
     }
 

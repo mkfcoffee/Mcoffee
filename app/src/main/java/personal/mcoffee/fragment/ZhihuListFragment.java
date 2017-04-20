@@ -2,60 +2,136 @@ package personal.mcoffee.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import personal.mcoffee.R;
+import personal.mcoffee.adapter.ZhihuListAdapter;
 import personal.mcoffee.base.BaseFragment;
-import personal.mcoffee.bean.Banner;
-import personal.mcoffee.widget.BannerView;
+import personal.mcoffee.constant.Constant;
+import personal.mcoffee.mvp.contract.ZhiHuDailyContract;
+import personal.mcoffee.mvp.model.DailyStories;
+import personal.mcoffee.mvp.model.Story;
+import personal.mcoffee.utils.Log;
 
 /**
- * Created by Mcoffee on 2016/10/12.
+ * Created by Mcoffee.
  */
 
-public class ZhihuListFragment extends BaseFragment {
+public class ZhihuListFragment extends BaseFragment implements ZhiHuDailyContract.View {
 
-    @BindView(R.id.zhihu_banner)
-    BannerView bannerView;
+    @BindView(R.id.zhihu_swipeRefreshLayout)
+    SwipeRefreshLayout swipeRefreshLayout;
+
+    @BindView(R.id.zhihu_recyclerView)
+    RecyclerView mRecyclerView;
 
     private Unbinder unbinder;
 
-    public static ZhihuListFragment getInstance(){
+    private DailyStories dailyStories;
+
+    private ZhihuListAdapter zhihuListAdapter;
+
+    private LinearLayoutManager linearLayoutManager;
+
+    private SwipeRefreshLayout.OnRefreshListener onRefreshListener;
+
+    private ZhiHuDailyContract.Presenter zhiHuDailyPresenter;
+
+    public static ZhihuListFragment getInstance() {
         return new ZhihuListFragment();
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        dailyStories = new DailyStories();
+        if (zhihuListAdapter == null) {
+            zhihuListAdapter = new ZhihuListAdapter(dailyStories, getActivity());
+        }
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_zhihu_list,container,false);
-        final List<Banner> banners = new ArrayList<>();
-        banners.add(new Banner("标题1",
-                "http://img2.3lian.com/2014/c7/25/d/40.jpg"));
-        banners.add(new Banner("标题2",
-                "http://img2.3lian.com/2014/c7/25/d/41.jpg"));
-        banners.add(new Banner("标题3",
-                "http://imgsrc.baidu.com/forum/pic/item/b64543a98226cffc8872e00cb9014a90f603ea30.jpg"));
-        banners.add(new Banner("标题4",
-                "http://imgsrc.baidu.com/forum/pic/item/261bee0a19d8bc3e6db92913828ba61eaad345d4.jpg"));
+        View view = inflater.inflate(R.layout.fragment_zhihu_list, container, false);
+        unbinder = ButterKnife.bind(this, view);
 
-        unbinder = ButterKnife.bind(this,view);
-        bannerView.setData(banners, new BannerView.OnBannerClickListener() {
+        onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onClick(Banner banner, int position, View view) {
-                Toast.makeText(getActivity(),"这是标题："+banners.get(position-1).title,Toast.LENGTH_SHORT).show();
+            public void onRefresh() {
+                Log.v("zhihu","isDataLoaded" +isDataLoaded);
+                if (!isDataLoaded) {
+                    zhiHuDailyPresenter.initialLoad();
+                } else {
+                    //数据已加载
+                    Log.v("zhihu","数据已加载");
+                    hideRefresh();
+                }
+            }
+        };
+        swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
+        linearLayoutManager = new LinearLayoutManager(getActivity());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setAdapter(zhihuListAdapter);
+
+        return view;
+    }
+
+    @Override
+    public void showRefresh() {
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(true);
             }
         });
-        return view;
+    }
+
+    @Override
+    public void hideRefresh() {
+        swipeRefreshLayout.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        }, Constant.REFRESH_DELAY_MILLIS);
+    }
+
+    @Override
+    public void showStories(DailyStories dailyStories) {
+        Log.v("zhihu", "showStories");
+//        this.dailyStories = dailyStories;
+        if (zhihuListAdapter != null) {
+            zhihuListAdapter.setDailyStories(dailyStories);
+            zhihuListAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void appendStories(List<Story> stories) {
+        if (zhihuListAdapter != null) {
+            zhihuListAdapter.addStories(stories);
+            zhihuListAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void setPresenter(ZhiHuDailyContract.Presenter presenter) {
+        this.zhiHuDailyPresenter = presenter;
     }
 
     @Override
@@ -66,6 +142,7 @@ public class ZhihuListFragment extends BaseFragment {
 
     @Override
     public void fetchData() {
-
+        showRefresh();
+        onRefreshListener.onRefresh();
     }
 }

@@ -25,5 +25,5 @@ public interface ZhiHuService {
 
     //http://news.at.zhihu.com/api/4/news/before/20131119
     @GET("news/before/{date}")
-    Observable<List<Story>> getBeforeNews(@Path("date") String date);
+    Observable<DailyStories> getBeforeNews(@Path("date") String date);
 }

@@ -17,6 +17,7 @@ import personal.mcoffee.di.component.DaggerMainActivityComponent;
 import personal.mcoffee.di.component.MainActivityComponent;
 import personal.mcoffee.fragment.GankFragment;
 import personal.mcoffee.fragment.ZhihuListFragment;
+import personal.mcoffee.mvp.presenter.ZhihuDailyPresenter;
 import personal.mcoffee.utils.Log;
 
 public class MainActivity extends BaseActivity {
@@ -75,7 +76,9 @@ public class MainActivity extends BaseActivity {
                         break;
                     case 1:
                         getSupportActionBar().setTitle("知乎日报");
-                        addFragment(R.id.main_container, ZhihuListFragment.getInstance());
+                        ZhihuListFragment zhihuListFragment = ZhihuListFragment.getInstance();
+                        addFragment(R.id.main_container, zhihuListFragment);
+                        ZhihuDailyPresenter zhihuDailyPresenter = new ZhihuDailyPresenter(zhihuListFragment);
                         break;
                     case 2:
                         break;

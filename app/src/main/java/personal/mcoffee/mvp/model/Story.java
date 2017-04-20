@@ -5,11 +5,12 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 /**
- * Created by Mcoffee on 2016/10/9.
+ * Created by Mcoffee.
  */
 
 public class Story {
     public List<String> images;
+    public  String image;
     public int type;
     public int id;
     @SerializedName("ga_prefix")

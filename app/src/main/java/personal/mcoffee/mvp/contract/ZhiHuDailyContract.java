@@ -1,6 +1,9 @@
 package personal.mcoffee.mvp.contract;
 
+import java.util.List;
+
 import personal.mcoffee.mvp.model.DailyStories;
+import personal.mcoffee.mvp.model.Story;
 import personal.mcoffee.mvp.presenter.BasePresenter;
 import personal.mcoffee.mvp.view.BaseView;
 
@@ -16,7 +19,7 @@ public interface ZhiHuDailyContract {
 
         void showStories(DailyStories dailyStories);
 
-        void appendStories(DailyStories dailyStories);
+        void appendStories(List<Story> stories);
 
     }
 

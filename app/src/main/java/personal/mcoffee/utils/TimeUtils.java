@@ -2,6 +2,7 @@ package personal.mcoffee.utils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -483,5 +484,29 @@ public class TimeUtils {
      */
     public static boolean isLeapYear(int year) {
         return year % 4 == 0 && year % 100 != 0 || year % 400 == 0;
+    }
+
+    /**
+     * 获取当前日期前几天的日期 Date类型
+     *
+     * @param before 前几天
+     * @return
+     */
+    public static Date getDateBefore(int before) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(getCurTimeDate());
+        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) - before);
+        return calendar.getTime();
+    }
+
+    /**
+     * 获取当前日期前几天的日期 String类型 yyyMMdd
+     *
+     * @param before 前几天
+     * @return
+     */
+    public static String getDate2StringBefore(int before) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        return date2String(getDateBefore(before), sdf);
     }
 }
