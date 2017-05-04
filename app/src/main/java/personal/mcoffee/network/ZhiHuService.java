@@ -1,10 +1,8 @@
 package personal.mcoffee.network;
 
-import java.util.List;
-
 import personal.mcoffee.mvp.model.DailyStories;
+import personal.mcoffee.mvp.model.News;
 import personal.mcoffee.mvp.model.SplashImg;
-import personal.mcoffee.mvp.model.Story;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import rx.Observable;
@@ -26,4 +24,8 @@ public interface ZhiHuService {
     //http://news.at.zhihu.com/api/4/news/before/20131119
     @GET("news/before/{date}")
     Observable<DailyStories> getBeforeNews(@Path("date") String date);
+
+    //http://news-at.zhihu.com/api/4/news/9373813 +id
+    @GET("news/{id}")
+    Observable<News> getDetailNews(@Path("id") int id);
 }

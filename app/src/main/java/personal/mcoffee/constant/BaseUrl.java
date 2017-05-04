@@ -11,6 +11,9 @@ public class BaseUrl {
     //知乎base url  http://news-at.zhihu.com/api/4/
     public static final String ZHIHU_URL = "http://news-at.zhihu.com/api/4/";
 
+    //知乎消息内容获取
+    public static final String ZHIHU_NEWS_URL = "http://news-at.zhihu.com/api/4/news/";
+
     //知乎欢迎页面 http://news-at.zhihu.com/api/7/prefetch-launch-images/1080*1920
     public static final String WELCOME_PAGE_URL = "http://news-at.zhihu.com/api/7/";
 }

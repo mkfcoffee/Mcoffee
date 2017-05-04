@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -19,7 +20,7 @@ import butterknife.ButterKnife;
 import personal.mcoffee.R;
 import personal.mcoffee.adapter.base.HeaderAndFooterAdapter;
 import personal.mcoffee.bean.Banner;
-import personal.mcoffee.listener.RecyclerViewListener;
+import personal.mcoffee.listener.RecyclerViewTListener;
 import personal.mcoffee.mvp.model.DailyStories;
 import personal.mcoffee.mvp.model.Story;
 import personal.mcoffee.widget.BannerView;
@@ -36,7 +37,8 @@ public class ZhihuListAdapter extends HeaderAndFooterAdapter {
     //    private List<Story> stories;
     private Context mContext;
     private LayoutInflater mLayoutInflater;
-    private RecyclerViewListener recyclerViewListener;
+    private RecyclerViewTListener<Story> recyclerViewTListener;
+    private BannerView.OnBannerClickListener onBannerClickListener;
 
     /**
      * 初次加载
@@ -73,14 +75,9 @@ public class ZhihuListAdapter extends HeaderAndFooterAdapter {
                 return;
             for (int i = 0; i < dailyStories.topStories.size(); i++) {
                 Story story = dailyStories.topStories.get(i);
-                banners.add(new Banner(story.title, story.image));
+                banners.add(new Banner(story.title, story.image,story.id));
             }
-            bannerVH.bannerView.setData(banners, new BannerView.OnBannerClickListener() {
-                @Override
-                public void onClick(Banner banner, int position, View view) {
-                    //banners.get(position - 1).title
-                }
-            });
+            bannerVH.bannerView.setData(banners, onBannerClickListener);
         }
     }
 
@@ -114,12 +111,20 @@ public class ZhihuListAdapter extends HeaderAndFooterAdapter {
     }
 
     @Override
-    public void bindNormalItemView(RecyclerView.ViewHolder holder, int position) {
+    public void bindNormalItemView(RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof ZhihuViewHolder) {
             ZhihuViewHolder zhihuVH = (ZhihuViewHolder) holder;
-            Story story = dailyStories.stories.get(position);
+            final Story story = dailyStories.stories.get(position);
             zhihuVH.titleTv.setText(story.title);
             Glide.with(mContext).load(story.images.get(0)).centerCrop().into(zhihuVH.imageIv);
+            if (recyclerViewTListener != null) {
+                zhihuVH.zhihuRl.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        recyclerViewTListener.onItemClick(story);
+                    }
+                });
+            }
         }
     }
 
@@ -159,6 +164,9 @@ public class ZhihuListAdapter extends HeaderAndFooterAdapter {
 
 
     static class ZhihuViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.item_zhihu_rl)
+        RelativeLayout zhihuRl;
+
         @BindView(R.id.item_zhihu_title)
         TextView titleTv;
         //        @BindView(R.id.item_zhihu_date)
@@ -183,4 +191,13 @@ public class ZhihuListAdapter extends HeaderAndFooterAdapter {
             ButterKnife.bind(this, itemView);
         }
     }
+
+    public void setRecyclerViewTListener(RecyclerViewTListener recyclerViewTListener) {
+        this.recyclerViewTListener = recyclerViewTListener;
+    }
+
+    public void setOnBannerClickListener(BannerView.OnBannerClickListener onBannerClickListener){
+        this.onBannerClickListener = onBannerClickListener;
+    }
+
 }

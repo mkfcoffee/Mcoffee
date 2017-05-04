@@ -5,6 +5,7 @@ import java.util.List;
 import personal.mcoffee.constant.BaseUrl;
 import personal.mcoffee.mvp.contract.ZhiHuDailyContract;
 import personal.mcoffee.mvp.model.DailyStories;
+import personal.mcoffee.mvp.model.News;
 import personal.mcoffee.mvp.model.Story;
 import personal.mcoffee.network.ZhiHuService;
 import personal.mcoffee.utils.Log;
@@ -17,7 +18,7 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
- * Created by Mcoffee on 2016/10/9.
+ * Created by Mcoffee.
  */
 
 public class ZhihuDailyPresenter implements ZhiHuDailyContract.Presenter {
@@ -36,7 +37,7 @@ public class ZhihuDailyPresenter implements ZhiHuDailyContract.Presenter {
 
     @Override
     public void initialLoad() {
-        Log.v("zhihu","ZhiHuPresenter initiaload");
+        Log.v("zhihu", "ZhiHuPresenter initiaload");
         getZhihuService().getLatestNews()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -86,6 +87,30 @@ public class ZhihuDailyPresenter implements ZhiHuDailyContract.Presenter {
                         mView.showRefresh();
                         mView.appendStories(stories);
                         mView.hideRefresh();
+                    }
+                });
+
+
+    }
+
+    @Override
+    public void displayNews(int id) {
+        getZhihuService().getDetailNews(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<News>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(News news) {
+                        mView.showNews(news);
                     }
                 });
     }

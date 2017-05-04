@@ -5,6 +5,7 @@
     android:padding="5dp">
 
     <RelativeLayout
+        android:id="@+id/item_zhihu_rl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="3dp">
