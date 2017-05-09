@@ -1,7 +1,10 @@
 package personal.mcoffee.listener;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+
+import com.bumptech.glide.Glide;
 
 import personal.mcoffee.utils.Log;
 
@@ -12,16 +15,23 @@ public abstract class EndlessWaterfallOnScrollListener extends RecyclerView.OnSc
 
     private int previousTotal = 0;
     private boolean isLoading = true;
-    private int pastVisibleItems, childCount, itemCount;
+    private int firstVisibleItem, childCount, itemCount;
     private int[] firstVisibleItems = null;
-    private int visibleThreshold = 3;
+    private int visibleThreshold = 5;
     private int currentPage = 1;
+    private Context mContext;
 
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
 
     public EndlessWaterfallOnScrollListener(
             StaggeredGridLayoutManager staggeredGridLayoutManager) {
         this.staggeredGridLayoutManager = staggeredGridLayoutManager;
+    }
+
+    public EndlessWaterfallOnScrollListener(
+            StaggeredGridLayoutManager staggeredGridLayoutManager,Context context) {
+        this.staggeredGridLayoutManager = staggeredGridLayoutManager;
+        this.mContext = context;
     }
 
     @Override
@@ -37,20 +47,51 @@ public abstract class EndlessWaterfallOnScrollListener extends RecyclerView.OnSc
         Log.v("EndlessWaterfallOnScrollListener itemCount", itemCount);
 
         if (firstVisibleItems != null && firstVisibleItems.length > 0) {
-            pastVisibleItems = firstVisibleItems[0];
-            Log.v("EndlessWaterfallOnScrollListener pastVisibleItems", pastVisibleItems);
+            firstVisibleItem = firstVisibleItems[0];
+            Log.v("EndlessWaterfallOnScrollListener firstVisibleItem", firstVisibleItem);
         }
         if (isLoading) {
-            if ((childCount + pastVisibleItems) >= previousTotal) {
+            if ((childCount + firstVisibleItem) >= previousTotal) {
                 isLoading = false;
                 previousTotal = itemCount;
                 Log.v("EndlessWaterfallOnScrollListener previousTotal", previousTotal);
             }
         }
-        if (!isLoading && (itemCount - childCount) <= (pastVisibleItems + visibleThreshold)) {
+        if (!isLoading && (itemCount - childCount) <= (firstVisibleItem + visibleThreshold)) {
             currentPage++;
             onLoadMore(currentPage);
             isLoading = true;
+        }
+    }
+
+    /**
+     * The RecyclerView is not currently scrolling.（静止没有滚动）
+     */
+    public static final int SCROLL_STATE_IDLE = 0;
+
+    /**
+     * The RecyclerView is currently being dragged by outside input such as user touch input.
+     *（正在被外部拖拽,一般为用户正在用手指滚动）
+     */
+    public static final int SCROLL_STATE_DRAGGING = 1;
+
+    /**
+     * The RecyclerView is currently animating to a final position while not under outside control.
+     *（自动滚动）
+     */
+    public static final int SCROLL_STATE_SETTLING = 2;
+    @Override
+    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+        switch (newState){
+            case SCROLL_STATE_IDLE:
+                Glide.with(mContext).resumeRequests();
+                break;
+            case SCROLL_STATE_DRAGGING:
+                Glide.with(mContext).pauseRequests();
+                break;
+            case SCROLL_STATE_SETTLING:
+                Glide.with(mContext).pauseRequests();
+                break;
         }
     }
 

@@ -10,6 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
@@ -22,6 +23,7 @@ import personal.mcoffee.R;
 import personal.mcoffee.adapter.base.HeaderAndFooterAdapter;
 import personal.mcoffee.bean.Gank;
 import personal.mcoffee.helper.PaddingAnimation;
+import personal.mcoffee.widget.ResizableImageView;
 
 /**
  * Created by Mcoffee on 2016/8/31.
@@ -99,19 +101,23 @@ public class GankWelfareAdapter extends HeaderAndFooterAdapter {
         if (holder instanceof GankWelfareViewHolder ){
             GankWelfareViewHolder normalVH = (GankWelfareViewHolder)holder;
 //            ViewGroup.LayoutParams lp = normalVH.welfareIv.getLayoutParams();
-            Glide.with(mContext)
-                 .load(list.get(position).url)
-                 .fitCenter()
-                 .crossFade(1000)
-//                 .placeholder(R.drawable.img_loading)
-                 .error(R.drawable.img_load_error)
-                 .into(normalVH.welfareIv);
+            Gank gank = list.get(position);
+            if(gank.url !=null) {
+                Glide.with(mContext)
+                        .load(gank.url)
+//               .placeholder(R.drawable.img_loading)
+                        .error(R.drawable.img_load_error)
+                        .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                        .into(normalVH.welfareIv);
 //                 .into(new GlideDrawableImageViewTarget(normalVH.welfareIv){
 //                     @Override
 //                     public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
 //                         super.onResourceReady(resource, new PaddingAnimation<>(animation));
 //                     }
 //                 });
+            }else{
+                Glide.clear(normalVH.welfareIv);
+            }
         }
     }
 
@@ -135,5 +141,11 @@ public class GankWelfareAdapter extends HeaderAndFooterAdapter {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    @Override
+    public void onViewRecycled(RecyclerView.ViewHolder holder) {
+        super.onViewRecycled(holder);
+
     }
 }

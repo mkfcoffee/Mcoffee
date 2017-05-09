@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,7 +60,7 @@ public class GankWelfareFragment extends BaseFragment {
 
     private static final long REFRESH_DELAY_MILLIS = 1000;
 
-    private static final int SPAN_COUNT = 3;
+    private static final int SPAN_COUNT = 2;
 
 
     public static GankWelfareFragment getInstance(String category){
@@ -111,12 +112,14 @@ public class GankWelfareFragment extends BaseFragment {
         swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
 
         StaggeredGridLayoutManager  staggeredGridLayoutManager = new StaggeredGridLayoutManager(SPAN_COUNT,StaggeredGridLayoutManager.VERTICAL);
+        staggeredGridLayoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(staggeredGridLayoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        ((SimpleItemAnimator)mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+//        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(gankWelfareAdapter);
 
-        mRecyclerView.addOnScrollListener(new EndlessWaterfallOnScrollListener(staggeredGridLayoutManager) {
+        mRecyclerView.addOnScrollListener(new EndlessWaterfallOnScrollListener(staggeredGridLayoutManager,getActivity()) {
             @Override
             public void onLoadMore(int currentPage) {
                getBackendData(category,currentPage);

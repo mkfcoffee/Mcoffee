@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +29,9 @@ import personal.mcoffee.di.module.GankModule;
  * Created by Mcoffee on 2016/8/27.
  */
 public class GankFragment extends BaseFragment {
+
+    @BindView(R.id.gank_toolbar)
+    Toolbar toolbar;
 
     @BindView(R.id.gank_tablayout)
     TabLayout tabLayout;
@@ -58,13 +63,15 @@ public class GankFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_gank,container,false);
-        unbinder = ButterKnife.bind(this,view);
+        View view = inflater.inflate(R.layout.fragment_gank, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        toolbar.setTitle("Gank");
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         for (int i = 0; i < titles.size(); i++) {
             String title = titles.get(i);
-            if("福利".equals(title)){
-                adapter.addTab(GankWelfareFragment.getInstance(title),title);
-            }else{
+            if ("福利".equals(title)) {
+                adapter.addTab(GankWelfareFragment.getInstance(title), title);
+            } else {
                 adapter.addTab(GankListFragment.getInstance(title), title);
             }
         }

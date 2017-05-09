@@ -78,12 +78,12 @@ public class ZhihuListFragment extends BaseFragment implements ZhiHuDailyContrac
         onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Log.v("zhihu","isDataLoaded" +isDataLoaded);
+                Log.v("zhihu", "isDataLoaded" + isDataLoaded);
                 if (!isDataLoaded) {
                     zhiHuDailyPresenter.initialLoad();
                 } else {
                     //数据已加载
-                    Log.v("zhihu","数据已加载");
+                    Log.v("zhihu", "数据已加载");
                     hideRefresh();
                 }
             }
@@ -98,9 +98,9 @@ public class ZhihuListFragment extends BaseFragment implements ZhiHuDailyContrac
         mRecyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int currentPage) {
-                Log.v("zhihu","request load more currentPage ：" + currentPage);
-                String date = TimeUtils.getDate2StringBefore(currentPage-2);
-                Log.v("zhihu","request load more date ：" + date);
+                Log.v("zhihu", "request load more currentPage ：" + currentPage);
+                String date = TimeUtils.getDate2StringBefore(currentPage - 2);
+                Log.v("zhihu", "request load more date ：" + date);
                 zhiHuDailyPresenter.loadMore(date);
             }
         });
@@ -123,22 +123,26 @@ public class ZhihuListFragment extends BaseFragment implements ZhiHuDailyContrac
 
     @Override
     public void showRefresh() {
-        swipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                swipeRefreshLayout.setRefreshing(true);
-            }
-        });
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefreshLayout.setRefreshing(true);
+                }
+            });
+        }
     }
 
     @Override
     public void hideRefresh() {
-        swipeRefreshLayout.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        }, Constant.REFRESH_DELAY_MILLIS);
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }, Constant.REFRESH_DELAY_MILLIS);
+        }
     }
 
     @Override
@@ -162,7 +166,7 @@ public class ZhihuListFragment extends BaseFragment implements ZhiHuDailyContrac
     @Override
     public void showNews(News news) {
         Intent intent = new Intent(getActivity(), WebActivity.class);
-        intent.putExtra("url",news.shareUrl);
+        intent.putExtra("url", news.shareUrl);
         startActivity(intent);
     }
 
