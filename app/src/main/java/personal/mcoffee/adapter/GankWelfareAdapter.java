@@ -1,42 +1,49 @@
 package personal.mcoffee.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
+import com.bumptech.glide.request.target.Target;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import personal.mcoffee.R;
+import personal.mcoffee.activity.PhotoActivity;
 import personal.mcoffee.adapter.base.HeaderAndFooterAdapter;
 import personal.mcoffee.bean.Gank;
-import personal.mcoffee.helper.PaddingAnimation;
-import personal.mcoffee.widget.ResizableImageView;
+import personal.mcoffee.listener.OnPhotoClickListener;
+import personal.mcoffee.utils.ScreenUtils;
 
 /**
  * Created by Mcoffee on 2016/8/31.
  */
 public class GankWelfareAdapter extends HeaderAndFooterAdapter {
 
-    private static final int TYPE_NORMAL=1;
+    private static final int TYPE_NORMAL = 1;
 
     private List<Gank> list;
     private Context mContext;
     private LayoutInflater mLayoutInflater;
+    private OnPhotoClickListener onPhotoClickListener;
 
-    public GankWelfareAdapter(List<Gank> list, Context context){
+    public GankWelfareAdapter(List<Gank> list, Context context) {
         this.list = list;
         this.mContext = context;
         mLayoutInflater = LayoutInflater.from(mContext);
@@ -97,26 +104,52 @@ public class GankWelfareAdapter extends HeaderAndFooterAdapter {
     }
 
     @Override
-    public void bindNormalItemView(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof GankWelfareViewHolder ){
-            GankWelfareViewHolder normalVH = (GankWelfareViewHolder)holder;
-//            ViewGroup.LayoutParams lp = normalVH.welfareIv.getLayoutParams();
-            Gank gank = list.get(position);
-            if(gank.url !=null) {
+    public void bindNormalItemView(final RecyclerView.ViewHolder holder, final int position) {
+        if (holder instanceof GankWelfareViewHolder) {
+            final GankWelfareViewHolder normalVH = (GankWelfareViewHolder) holder;
+            ViewGroup.LayoutParams lp = normalVH.welfareIv.getLayoutParams();
+            final  Gank gank = list.get(position);
+            if (gank.url != null) {
                 Glide.with(mContext)
                         .load(gank.url)
-//               .placeholder(R.drawable.img_loading)
+                        .asBitmap()
+//                        .placeholder(R.drawable.img_loading)
                         .error(R.drawable.img_load_error)
                         .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                        .override(ScreenUtils.getScreenWidth(mContext)/2,Target.SIZE_ORIGINAL)
+                        .fitCenter()
                         .into(normalVH.welfareIv);
-//                 .into(new GlideDrawableImageViewTarget(normalVH.welfareIv){
-//                     @Override
-//                     public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> animation) {
-//                         super.onResourceReady(resource, new PaddingAnimation<>(animation));
-//                     }
-//                 });
-            }else{
+//                        .dontTransform()
+//                        .into(new SimpleTarget<Bitmap>(Target.SIZE_ORIGINAL,Target.SIZE_ORIGINAL) {
+//                            @Override
+//                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+//                                //原始图片宽高
+//                                int imageWidth = resource.getWidth();
+//                                int imageHeight = resource.getHeight();
+//                                //宽度取屏幕一半值
+//                                int width = ScreenUtils.getScreenWidth(mContext)/2 ;
+//                                //宽高比
+//                                float ratio = (float) ((imageWidth*1.0)/(imageHeight*1.0));
+//                                //按比例得出高度
+//                                int height = (int)(width*1.0/ratio);
+//                                ViewGroup.LayoutParams params = normalVH.welfareIv.getLayoutParams();
+//                                params.width = width;
+//                                params.height = height;
+//                                normalVH.welfareIv.setImageBitmap(resource);
+//                            }
+//                        });
+                normalVH.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(mContext,gank.url+"位置："+position,Toast.LENGTH_SHORT).show();
+                        if(onPhotoClickListener!=null){
+                            onPhotoClickListener.OnPhotoClickListener(normalVH.welfareIv,gank.url);
+                        }
+                    }
+                });
+            } else {
                 Glide.clear(normalVH.welfareIv);
+                ((GankWelfareViewHolder) holder).welfareIv.setImageBitmap(null);
             }
         }
     }
@@ -146,6 +179,26 @@ public class GankWelfareAdapter extends HeaderAndFooterAdapter {
     @Override
     public void onViewRecycled(RecyclerView.ViewHolder holder) {
         super.onViewRecycled(holder);
+        if (holder instanceof GankWelfareViewHolder){
+            Glide.clear(((GankWelfareViewHolder) holder).welfareIv);
+        }
 
     }
+
+    @Override
+    public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        if (getItemViewType(holder.getLayoutPosition()) == TYPE_FOOTER) {
+            ViewGroup.LayoutParams lp = holder.itemView.getLayoutParams();
+            if (lp != null && lp instanceof StaggeredGridLayoutManager.LayoutParams) {
+                StaggeredGridLayoutManager.LayoutParams p = (StaggeredGridLayoutManager.LayoutParams) lp;
+                p.setFullSpan(true);
+            }
+        }
+    }
+
+    public void setOnPhotoClickListener(OnPhotoClickListener onPhotoClickListener){
+        this.onPhotoClickListener = onPhotoClickListener;
+    }
+
 }

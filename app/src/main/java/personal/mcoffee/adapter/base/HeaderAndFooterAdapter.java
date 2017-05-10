@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 public abstract class HeaderAndFooterAdapter extends RecyclerView.Adapter {
 
     private static final int TYPE_HEADER = -1;
-    private static final int TYPE_FOOTER = 0;
+    public static final int TYPE_FOOTER = 0;
     private static final int TYPE_OFFEST = 2;
 
     @Override
