@@ -3,29 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--<android.support.v7.widget.Toolbar-->
-    <!--android:id="@+id/main_toolbar"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="?attr/actionBarSize"-->
-    <!--android:background="?attr/colorPrimary"-->
-    <!--android:popupTheme="@style/ToolbarPopupTheme"-->
-    <!--app:theme="@style/ToolbarMenuTheme">-->
-
-    <!--</android.support.v7.widget.Toolbar>-->
-
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/main_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="56dp">
+        android:layout_height="match_parent">
 
-    </RelativeLayout>
+    </FrameLayout>
 
     <com.ashokvarma.bottomnavigation.BottomNavigationBar
         android:id="@+id/bottom_navigation_bar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_gravity="bottom"
-        android:fitsSystemWindows="true" />
+        />
 
 </android.support.design.widget.CoordinatorLayout>

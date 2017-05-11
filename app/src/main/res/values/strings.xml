@@ -4,5 +4,8 @@
     <string name="loading_more">正在加载更多...</string>
     <string name="loading">加载中...</string>
     <string name="menu_search">搜索</string>
+    <string name="me_collect">收藏</string>
+    <string name="me_history">历史</string>
+    <string name="me_night">夜间</string>
     <string name="menu_settings">设置</string>
 </resources>

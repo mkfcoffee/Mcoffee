@@ -58,27 +58,29 @@ public class ZhihuListAdapter extends HeaderAndFooterAdapter {
 
     @Override
     public boolean isHeaderUsed() {
-        return true;
+        return false;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateHeaderViewHolder(ViewGroup parent, int viewType) {
-        return new BannerViewHolder(mLayoutInflater.inflate(R.layout.item_zhihu_banner, parent, false));
+//        return new BannerViewHolder(mLayoutInflater.inflate(R.layout.item_zhihu_banner, parent, false));
+        return  null;
     }
+
 
     @Override
     public void bindHeaderView(RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof BannerViewHolder) {
-            BannerViewHolder bannerVH = (BannerViewHolder) holder;
-            List<Banner> banners = new ArrayList<>();
-            if (dailyStories.topStories == null || dailyStories.topStories.size() < 1)
-                return;
-            for (int i = 0; i < dailyStories.topStories.size(); i++) {
-                Story story = dailyStories.topStories.get(i);
-                banners.add(new Banner(story.title, story.image,story.id));
-            }
-            bannerVH.bannerView.setData(banners, onBannerClickListener);
-        }
+//        if (holder instanceof BannerViewHolder) {
+//            BannerViewHolder bannerVH = (BannerViewHolder) holder;
+//            List<Banner> banners = new ArrayList<>();
+//            if (dailyStories.topStories == null || dailyStories.topStories.size() < 1)
+//                return;
+//            for (int i = 0; i < dailyStories.topStories.size(); i++) {
+//                Story story = dailyStories.topStories.get(i);
+//                banners.add(new Banner(story.title, story.image,story.id));
+//            }
+//            bannerVH.bannerView.setData(banners, onBannerClickListener);
+//        }
     }
 
     @Override

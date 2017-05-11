@@ -1,7 +1,9 @@
 package personal.mcoffee.mvp.presenter;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import personal.mcoffee.bean.Banner;
 import personal.mcoffee.constant.BaseUrl;
 import personal.mcoffee.mvp.contract.ZhiHuDailyContract;
 import personal.mcoffee.mvp.model.DailyStories;
@@ -44,6 +46,14 @@ public class ZhihuDailyPresenter implements ZhiHuDailyContract.Presenter {
                 .subscribe(new Subscriber<DailyStories>() {
                     @Override
                     public void onNext(DailyStories dailyStories) {
+                        List<Banner> banners = new ArrayList<>();
+                        if (dailyStories.topStories == null || dailyStories.topStories.size() < 1)
+                            throw new NullPointerException("there is no banners' data");
+                        for (int i = 0; i < dailyStories.topStories.size(); i++) {
+                            Story story = dailyStories.topStories.get(i);
+                            banners.add(new Banner(story.title, story.image, story.id));
+                        }
+                        mView.showBanners(banners);
                         mView.showStories(dailyStories);
                         mView.hideRefresh();
                     }

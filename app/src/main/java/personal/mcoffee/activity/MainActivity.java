@@ -5,11 +5,10 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -23,6 +22,7 @@ import personal.mcoffee.base.BaseActivity;
 import personal.mcoffee.di.component.DaggerMainActivityComponent;
 import personal.mcoffee.di.component.MainActivityComponent;
 import personal.mcoffee.fragment.GankFragment;
+import personal.mcoffee.fragment.MyFragment;
 import personal.mcoffee.fragment.ZhihuListFragment;
 import personal.mcoffee.mvp.presenter.ZhihuDailyPresenter;
 import personal.mcoffee.utils.Log;
@@ -36,9 +36,9 @@ public class MainActivity extends BaseActivity {
 //    Toolbar toolbar;
 
     @BindView(R.id.main_container)
-    RelativeLayout mRelativeLayout;
+    FrameLayout frameLayout;
 
-    SearchView searchView;
+//    SearchView searchView;
 
     MainActivityComponent mainActivityComponent;
 
@@ -90,6 +90,8 @@ public class MainActivity extends BaseActivity {
                         ZhihuDailyPresenter zhihuDailyPresenter = new ZhihuDailyPresenter(zhihuListFragment);
                         break;
                     case 2:
+                        MyFragment myFragment = MyFragment.getInstance();
+                        addFragment(R.id.main_container,myFragment);
                         break;
                     default:
                         break;
@@ -120,54 +122,55 @@ public class MainActivity extends BaseActivity {
 //    }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_main_toolbar_menu,menu);
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        if(searchItem != null){
-            searchView =(SearchView) MenuItemCompat.getActionView(searchItem);
-            EditText searchEt = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-            searchEt.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
-            searchEt.setHintTextColor(ContextCompat.getColor(this,R.color.white));
-            searchView.setSubmitButtonEnabled(false);
-            searchView.setQueryHint("请输入搜索内容");
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    Toast.makeText(MainActivity.this, query, Toast.LENGTH_SHORT).show();
-                    return false;
-                }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.activity_main_toolbar_menu,menu);
+//        MenuItem searchItem = menu.findItem(R.id.action_search);
+//        if(searchItem != null){
+//            searchView =(SearchView) MenuItemCompat.getActionView(searchItem);
+//            EditText searchEt = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+//            searchEt.setBackgroundColor(ContextCompat.getColor(this, android.R.color.transparent));
+//            searchEt.setHintTextColor(ContextCompat.getColor(this,R.color.white));
+//            searchView.setSubmitButtonEnabled(false);
+//            searchView.setQueryHint("请输入搜索内容");
+//            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//                @Override
+//                public boolean onQueryTextSubmit(String query) {
+//                    Toast.makeText(MainActivity.this, query, Toast.LENGTH_SHORT).show();
+//                    return false;
+//                }
+//
+//                @Override
+//                public boolean onQueryTextChange(String newText) {
+//                    return false;
+//                }
+//            });
+//            SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
+//            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+//        }
+//        return true;
+//    }
 
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    return false;
-                }
-            });
-            SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.action_search:
-                break;
-            case R.id.action_settings:
-                break;
-            default:
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (!searchView.isIconified()) {
-            searchView.setIconified(true);
-        } else {
-            super.onBackPressed();
-        }
-    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()){
+//            case R.id.action_search:
+//                break;
+//            case R.id.action_settings:
+//                break;
+//            default:
+//                break;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
+//
+//    @Override
+//    public void onBackPressed() {
+//        if (!searchView.isIconified()) {
+//            searchView.setIconified(true);
+//        } else {
+//            super.onBackPressed();
+//        }
+//    }
 }

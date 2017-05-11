@@ -1,12 +1,17 @@
 package personal.mcoffee.base;
 
+import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.lang.reflect.Field;
 
 /**
  * Created by Mcoffee on 2016/8/25.
@@ -91,4 +96,35 @@ public abstract class BaseFragment extends Fragment {
 //        }
 //        return false;
 //    }
+
+    protected void fixToolbar(Toolbar toolbar) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            int statusHeight = getStatusBarHeight(getActivity());
+            ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) toolbar.getLayoutParams();
+            layoutParams.setMargins(0, statusHeight, 0, 0);
+        }
+    }
+
+    /**
+     * 获取系统状态栏高度
+     *
+     * @param context
+     * @return
+     */
+    public int getStatusBarHeight(Context context) {
+        Class<?> c = null;
+        Object obj = null;
+        Field field = null;
+        int x = 0, statusBarHeight = 0;
+        try {
+            c = Class.forName("com.android.internal.R$dimen");
+            obj = c.newInstance();
+            field = c.getField("status_bar_height");
+            x = Integer.parseInt(field.get(obj).toString());
+            statusBarHeight = context.getResources().getDimensionPixelSize(x);
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        return statusBarHeight;
+    }
 }

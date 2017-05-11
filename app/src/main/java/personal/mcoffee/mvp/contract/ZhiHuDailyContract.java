@@ -2,6 +2,7 @@ package personal.mcoffee.mvp.contract;
 
 import java.util.List;
 
+import personal.mcoffee.bean.Banner;
 import personal.mcoffee.mvp.model.DailyStories;
 import personal.mcoffee.mvp.model.News;
 import personal.mcoffee.mvp.model.Story;
@@ -17,6 +18,8 @@ public interface ZhiHuDailyContract {
         void showRefresh();
 
         void hideRefresh();
+
+        void showBanners(List<Banner> banners);
 
         void showStories(DailyStories dailyStories);
 

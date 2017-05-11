@@ -1,14 +1,23 @@
 package personal.mcoffee.fragment;
 
+import android.app.SearchManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -19,7 +28,6 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import personal.mcoffee.R;
 import personal.mcoffee.adapter.GankFragmentPagerAdapter;
-import personal.mcoffee.adapter.GankWelfareAdapter;
 import personal.mcoffee.base.BaseFragment;
 import personal.mcoffee.di.component.DaggerGankComponent;
 import personal.mcoffee.di.component.GankComponent;
@@ -47,6 +55,8 @@ public class GankFragment extends BaseFragment {
     @Inject
     List<String> titles;
 
+    SearchView searchView;
+
     private GankComponent gankComponent;
 
     public static GankFragment getInstance() {
@@ -67,6 +77,8 @@ public class GankFragment extends BaseFragment {
         unbinder = ButterKnife.bind(this, view);
         toolbar.setTitle("Gank");
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        fixToolbar(toolbar);
+        setHasOptionsMenu(true);
         for (int i = 0; i < titles.size(); i++) {
             String title = titles.get(i);
             if ("福利".equals(title)) {
@@ -109,4 +121,47 @@ public class GankFragment extends BaseFragment {
     public void fetchData() {
 
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu,inflater);
+        inflater.inflate(R.menu.activity_main_toolbar_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        if (searchItem != null) {
+            searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+            EditText searchEt = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+            searchEt.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.transparent));
+            searchEt.setHintTextColor(ContextCompat.getColor(getContext(), R.color.white));
+            searchView.setSubmitButtonEnabled(false);
+            searchView.setQueryHint("请输入搜索内容");
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    Toast.makeText(getContext(), query, Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    return false;
+                }
+            });
+            SearchManager searchManager = (SearchManager) getActivity().getSystemService(getActivity().SEARCH_SERVICE);
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                break;
+            case R.id.action_settings:
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

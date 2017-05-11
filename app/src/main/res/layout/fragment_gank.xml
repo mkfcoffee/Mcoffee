@@ -19,6 +19,7 @@
         </android.support.v7.widget.Toolbar>
 
         <android.support.design.widget.TabLayout
+            android:layout_marginTop="8dp"
             android:id="@+id/gank_tablayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

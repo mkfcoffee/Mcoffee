@@ -141,7 +141,7 @@ public class GankWelfareAdapter extends HeaderAndFooterAdapter {
                 normalVH.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(mContext,gank.url+"位置："+position,Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(mContext,gank.url+"位置："+position,Toast.LENGTH_SHORT).show();
                         if(onPhotoClickListener!=null){
                             onPhotoClickListener.OnPhotoClickListener(normalVH.welfareIv,gank.url);
                         }

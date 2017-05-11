@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +46,12 @@ public class ZhihuListFragment extends BaseFragment implements ZhiHuDailyContrac
     @BindView(R.id.zhihu_recyclerView)
     RecyclerView mRecyclerView;
 
+    @BindView(R.id.zhihu_toolbar)
+    Toolbar toolbar;
+
+    @BindView(R.id.zhihu_banner)
+    BannerView bannerView;
+
     private Unbinder unbinder;
 
     private DailyStories dailyStories;
@@ -75,6 +83,10 @@ public class ZhihuListFragment extends BaseFragment implements ZhiHuDailyContrac
         View view = inflater.inflate(R.layout.fragment_zhihu_list, container, false);
         unbinder = ButterKnife.bind(this, view);
 
+        toolbar.setTitle("知乎");
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+//        fixToolbar(toolbar);
+        setHasOptionsMenu(true);
         onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -104,12 +116,12 @@ public class ZhihuListFragment extends BaseFragment implements ZhiHuDailyContrac
                 zhiHuDailyPresenter.loadMore(date);
             }
         });
-        zhihuListAdapter.setOnBannerClickListener(new BannerView.OnBannerClickListener() {
-            @Override
-            public void onClick(Banner banner, int position, View view) {
-                zhiHuDailyPresenter.displayNews(banner.id);
-            }
-        });
+//        zhihuListAdapter.setOnBannerClickListener(new BannerView.OnBannerClickListener() {
+//            @Override
+//            public void onClick(Banner banner, int position, View view) {
+//                zhiHuDailyPresenter.displayNews(banner.id);
+//            }
+//        });
         zhihuListAdapter.setRecyclerViewTListener(new RecyclerViewTListener<Story>() {
             @Override
             public void onItemClick(Story story) {
@@ -143,6 +155,16 @@ public class ZhihuListFragment extends BaseFragment implements ZhiHuDailyContrac
                 }
             }, Constant.REFRESH_DELAY_MILLIS);
         }
+    }
+
+    @Override
+    public void showBanners(List<Banner> banners){
+        bannerView.setData(banners,new BannerView.OnBannerClickListener() {
+            @Override
+            public void onClick(Banner banner, int position, View view) {
+                zhiHuDailyPresenter.displayNews(banner.id);
+            }
+        });
     }
 
     @Override

@@ -245,11 +245,11 @@ public class BannerView extends FrameLayout implements ViewPager.OnPageChangeLis
         try {
             for (int i = 0; i < indicatorViews.length; i++) {
                 indicatorViews[i]
-                        .setBackgroundResource(indicatorUnselected);
+                        .setImageResource(indicatorUnselected);
             }
             if (indicatorViews.length > selectedPosition)
                 indicatorViews[selectedPosition]
-                        .setBackgroundResource(indicatorSelected);
+                        .setImageResource(indicatorSelected);
         } catch (Exception e) {
             Log.i(BannerView.class.getSimpleName(), "指示器路径不正确");
         }

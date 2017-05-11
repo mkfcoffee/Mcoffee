@@ -97,12 +97,14 @@ public class GankListFragment extends BaseFragment {
                 Log.v("GankListFragment","Type:"+category +" invoke onRefresh");
                 if (!isDataLoaded){
                     getBackendData(category, PAGE_ONE);
-                    swipeRefreshLayout.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
-                    },REFRESH_DELAY_MILLIS);
+                    if(swipeRefreshLayout != null){
+                        swipeRefreshLayout.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                swipeRefreshLayout.setRefreshing(false);
+                            }
+                        },REFRESH_DELAY_MILLIS);
+                    }
                 }else{
                     mSnackbar = Snackbar.make(getActivity().findViewById(android.R.id.content),"最新数据已加载",Snackbar.LENGTH_SHORT);
                     mSnackbar.show();
@@ -128,7 +130,7 @@ public class GankListFragment extends BaseFragment {
         gankListAdapter.setRecyclerViewListener(new RecyclerViewListener() {
             @Override
             public void onItemClick(int position) {
-                Toast.makeText(getActivity(),"current position : "+position +"url: "+gankList.get(position).url,Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(),"current position : "+position +"url: "+gankList.get(position).url,Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(), WebActivity.class);
                 intent.putExtra("url",gankList.get(position).url);
                 startActivity(intent);
