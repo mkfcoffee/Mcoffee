@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Mcoffee</string>
+    <string name="app_name">CoffeeTime</string>
     <string name="gank_type_android">Android</string>
     <string name="loading_more">正在加载更多...</string>
     <string name="loading">加载中...</string>

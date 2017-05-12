@@ -3,6 +3,7 @@ package personal.mcoffee.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -23,7 +24,6 @@ import personal.mcoffee.activity.WebActivity;
 import personal.mcoffee.adapter.ZhihuListAdapter;
 import personal.mcoffee.base.BaseFragment;
 import personal.mcoffee.bean.Banner;
-import personal.mcoffee.constant.Constant;
 import personal.mcoffee.listener.EndlessRecyclerOnScrollListener;
 import personal.mcoffee.listener.RecyclerViewTListener;
 import personal.mcoffee.mvp.contract.ZhiHuDailyContract;
@@ -39,6 +39,7 @@ import personal.mcoffee.widget.BannerView;
  */
 
 public class ZhihuListFragment extends BaseFragment implements ZhiHuDailyContract.View {
+
 
     @BindView(R.id.zhihu_swipeRefreshLayout)
     SwipeRefreshLayout swipeRefreshLayout;
@@ -80,7 +81,7 @@ public class ZhihuListFragment extends BaseFragment implements ZhiHuDailyContrac
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_zhihu_list, container, false);
+        final View view = inflater.inflate(R.layout.fragment_zhihu_list, container, false);
         unbinder = ButterKnife.bind(this, view);
 
         toolbar.setTitle("知乎");
@@ -96,6 +97,7 @@ public class ZhihuListFragment extends BaseFragment implements ZhiHuDailyContrac
                 } else {
                     //数据已加载
                     Log.v("zhihu", "数据已加载");
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), "最新数据已加载", Snackbar.LENGTH_SHORT).show();
                     hideRefresh();
                 }
             }
@@ -136,30 +138,26 @@ public class ZhihuListFragment extends BaseFragment implements ZhiHuDailyContrac
     @Override
     public void showRefresh() {
         if (swipeRefreshLayout != null) {
-            swipeRefreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    swipeRefreshLayout.setRefreshing(true);
-                }
-            });
+            swipeRefreshLayout.setRefreshing(true);
         }
     }
 
     @Override
     public void hideRefresh() {
         if (swipeRefreshLayout != null) {
-            swipeRefreshLayout.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-            }, Constant.REFRESH_DELAY_MILLIS);
+//            swipeRefreshLayout.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    swipeRefreshLayout.setRefreshing(false);
+//                }
+//            }, Constant.REFRESH_DELAY_MILLIS);
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
     @Override
-    public void showBanners(List<Banner> banners){
-        bannerView.setData(banners,new BannerView.OnBannerClickListener() {
+    public void showBanners(List<Banner> banners) {
+        bannerView.setData(banners, new BannerView.OnBannerClickListener() {
             @Override
             public void onClick(Banner banner, int position, View view) {
                 zhiHuDailyPresenter.displayNews(banner.id);
@@ -198,6 +196,17 @@ public class ZhihuListFragment extends BaseFragment implements ZhiHuDailyContrac
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.destroyDrawingCache();
+            swipeRefreshLayout.clearAnimation();
+        }
+
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
@@ -205,7 +214,9 @@ public class ZhihuListFragment extends BaseFragment implements ZhiHuDailyContrac
 
     @Override
     public void fetchData() {
-        showRefresh();
+        swipeRefreshLayout.setProgressViewOffset(false, 0, 100);
+        swipeRefreshLayout.setRefreshing(true);
         onRefreshListener.onRefresh();
     }
+
 }

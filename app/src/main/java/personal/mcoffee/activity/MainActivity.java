@@ -2,6 +2,7 @@ package personal.mcoffee.activity;
 
 import android.app.SearchManager;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
@@ -69,11 +70,14 @@ public class MainActivity extends BaseActivity {
      * 初始化底部导航栏
      */
     protected void initBottomNavigation() {
+        bottomNavigationBar.setMode(BottomNavigationBar.MODE_SHIFTING)
+                .setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_RIPPLE)
+                .setActiveColor(R.color.colorPrimary)
+                .setInActiveColor("#4fc3f7");
         bottomNavigationBar.addItem(new BottomNavigationItem(R.drawable.icon_gank, "干货"))
                 .addItem(new BottomNavigationItem(R.drawable.icon_zhihu, "知乎"))
                 .addItem(new BottomNavigationItem(R.drawable.icon_my, "我的"))
                 .initialise();
-
         bottomNavigationBar.setTabSelectedListener(new BottomNavigationBar.OnTabSelectedListener() {
             @Override
             public void onTabSelected(int position) {
@@ -81,17 +85,17 @@ public class MainActivity extends BaseActivity {
                 switch (position){
                     case 0:
 //                        getSupportActionBar().setTitle("Gank");
-                        addFragment(R.id.main_container, GankFragment.getInstance());
+                        replaceFragment(R.id.main_container, GankFragment.getInstance());
                         break;
                     case 1:
 //                        getSupportActionBar().setTitle("知乎日报");
                         ZhihuListFragment zhihuListFragment = ZhihuListFragment.getInstance();
-                        addFragment(R.id.main_container, zhihuListFragment);
+                        replaceFragment(R.id.main_container, zhihuListFragment);
                         ZhihuDailyPresenter zhihuDailyPresenter = new ZhihuDailyPresenter(zhihuListFragment);
                         break;
                     case 2:
                         MyFragment myFragment = MyFragment.getInstance();
-                        addFragment(R.id.main_container,myFragment);
+                        replaceFragment(R.id.main_container,myFragment);
                         break;
                     default:
                         break;

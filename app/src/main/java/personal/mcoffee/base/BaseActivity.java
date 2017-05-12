@@ -16,7 +16,9 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import personal.mcoffee.R;
+import personal.mcoffee.constant.Constant;
 import personal.mcoffee.di.component.ApplicationComponent;
+import personal.mcoffee.utils.Log;
 
 /**
  * BaseActivity
@@ -24,6 +26,8 @@ import personal.mcoffee.di.component.ApplicationComponent;
 public abstract class BaseActivity extends AppCompatActivity {
 
     public static final String ACTION_EXIT = "action_exit";
+
+    private long firstClickBackTime = 0;
 
     private BroadcastReceiver brc = new BroadcastReceiver() {
 
@@ -71,6 +75,18 @@ public abstract class BaseActivity extends AppCompatActivity {
                                    .replace(containerViewId,fragment,fragment.getClass().getSimpleName())
                                    .addToBackStack(fragment.getClass().getSimpleName())
                                    .commitAllowingStateLoss();
+        Log.v("Fragment transaction","addFragment "+fragment.getClass().getSimpleName());
+    }
+
+    /**
+     * add Fragment
+     * @param fragment
+     */
+    protected void replaceFragment(@IdRes int containerViewId, @NonNull Fragment fragment){
+        getSupportFragmentManager().beginTransaction()
+                                   .replace(containerViewId,fragment,fragment.getClass().getSimpleName())
+                                   .commitAllowingStateLoss();
+        Log.v("Fragment transaction","rePlaceFragment "+fragment.getClass().getSimpleName());
     }
 
     /**
@@ -93,11 +109,20 @@ public abstract class BaseActivity extends AppCompatActivity {
         sendBroadcast(intent);
     }
 
+    protected  void doubleClickExit(){
+        if(System.currentTimeMillis() - firstClickBackTime > Constant.EXIT_MILLIS){
+            firstClickBackTime = System.currentTimeMillis();
+        }else{
+            finish();
+        }
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (KeyEvent.KEYCODE_BACK == keyCode) {
             if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-                finish();
+//                finish();
+                doubleClickExit();
                 return true;
             }
         }

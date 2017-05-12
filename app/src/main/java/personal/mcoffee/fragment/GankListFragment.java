@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,12 +63,12 @@ public class GankListFragment extends BaseFragment {
     private static final long REFRESH_DELAY_MILLIS = 1000;
 
 
-    public static GankListFragment getInstance(String category){
+    public static GankListFragment getInstance(String category) {
         GankListFragment gankListFragment = new GankListFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("category",category);
+        bundle.putString("category", category);
         gankListFragment.setArguments(bundle);
-        return  gankListFragment;
+        return gankListFragment;
     }
 
 
@@ -77,8 +76,8 @@ public class GankListFragment extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         category = getArguments().getString("category");
-        Log.v("Type","---------"+category);
-        if(gankList == null) gankList = new ArrayList<Gank>();
+        Log.v("Type", "---------" + category);
+        if (gankList == null) gankList = new ArrayList<Gank>();
         if (gankListAdapter == null) {
             gankListAdapter = new GankListFooterAdapter(gankList, getActivity());
         }
@@ -88,26 +87,20 @@ public class GankListFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.v("GankListFragment","Type:"+category +"invoke onCreateView");
-        final View view = inflater.inflate(R.layout.fragment_gank_list,container,false);
-        unbinder = ButterKnife.bind(this,view);
+        Log.v("GankListFragment", "Type:" + category + "invoke onCreateView");
+        final View view = inflater.inflate(R.layout.fragment_gank_list, container, false);
+        unbinder = ButterKnife.bind(this, view);
         onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Log.v("GankListFragment","Type:"+category +" invoke onRefresh");
-                if (!isDataLoaded){
+                Log.v("GankListFragment", "Type:" + category + " invoke onRefresh");
+                if (!isDataLoaded) {
                     getBackendData(category, PAGE_ONE);
-                    if(swipeRefreshLayout != null){
-                        swipeRefreshLayout.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                swipeRefreshLayout.setRefreshing(false);
-                            }
-                        },REFRESH_DELAY_MILLIS);
-                    }
-                }else{
-                    mSnackbar = Snackbar.make(getActivity().findViewById(android.R.id.content),"最新数据已加载",Snackbar.LENGTH_SHORT);
+                } else {
+                    mSnackbar = Snackbar.make(getActivity().findViewById(android.R.id.content), "最新数据已加载", Snackbar.LENGTH_SHORT);
                     mSnackbar.show();
+                }
+                if (swipeRefreshLayout != null) {
                     swipeRefreshLayout.setRefreshing(false);
                 }
             }
@@ -124,7 +117,7 @@ public class GankListFragment extends BaseFragment {
         mRecyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int currentPage) {
-                getBackendData(category,currentPage);
+                getBackendData(category, currentPage);
             }
         });
         gankListAdapter.setRecyclerViewListener(new RecyclerViewListener() {
@@ -132,7 +125,7 @@ public class GankListFragment extends BaseFragment {
             public void onItemClick(int position) {
 //                Toast.makeText(getActivity(),"current position : "+position +"url: "+gankList.get(position).url,Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getActivity(), WebActivity.class);
-                intent.putExtra("url",gankList.get(position).url);
+                intent.putExtra("url", gankList.get(position).url);
                 startActivity(intent);
             }
         });
@@ -141,14 +134,22 @@ public class GankListFragment extends BaseFragment {
 
     @Override
     public void fetchData() {
-        swipeRefreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                swipeRefreshLayout.setRefreshing(true);
-            }
-        });
+        swipeRefreshLayout.setProgressViewOffset(false, 0, 100);
+        swipeRefreshLayout.setRefreshing(true);
         Log.v("gank", "fetchData()");
         onRefreshListener.onRefresh();
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setRefreshing(false);
+            swipeRefreshLayout.destroyDrawingCache();
+            swipeRefreshLayout.clearAnimation();
+        }
+
     }
 
     @Override
@@ -160,13 +161,13 @@ public class GankListFragment extends BaseFragment {
     /**
      * 请求相应接口，获取后台数据
      */
-    public void getBackendData(String category , final int page){
+    public void getBackendData(String category, final int page) {
         Retrofit retrofit = new Retrofit.Builder()
-                                        .baseUrl(BaseUrl.CATEGORY_URL)
-                                        .addConverterFactory(GsonConverterFactory.create())
-                                        .build();
+                .baseUrl(BaseUrl.CATEGORY_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
         GankService request = retrofit.create(GankService.class);
-        Call<GankData> call = request.gankData(category,page);
+        Call<GankData> call = request.gankData(category, page);
         call.enqueue(new Callback<GankData>() {
             @Override
             public void onResponse(Call<GankData> call, Response<GankData> response) {
