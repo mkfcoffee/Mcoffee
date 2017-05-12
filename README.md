@@ -2,6 +2,7 @@
 *A demo app of Gank and Zhihu Daily based on MVP,RxJava,Dagger,Okhttp3,Retrofit2,Glide*
 
 >基于MVP,RxJava,Dagger,Okhttp3,Retrofit2等的demo
+
 >本应用为个人实践所用项目，目的在于学习框架，android design等知识
 
 ## app截图
@@ -25,7 +26,7 @@
 * [Glide An image loading and caching library for Android focused on smooth scrolling](https://github.com/bumptech/glide)
 * [ButterKnife](https://github.com/JakeWharton/butterknife)
 * [BottomNavigationbar 底部导航栏](https://github.com/Ashok-Varma/BottomNavigation)
-* 
+ 
 ## Version
 ### v1.0
 * gank及zhihu Daily模块初步完成，还需完善
@@ -36,6 +37,7 @@
 >感谢提供框架的组织及个人
 
 >应用所展示内容，新闻等来自网络，若内容有侵权请联系作者删除，本应用仅用于分享学习.
->如果您有bug或好的建议，敬请告知我!thanks!
+
+>如果您有bug或好的建议，敬请告知我! thanks!
 -Email:<mkfcoffee@163.com>
 
